@@ -20,8 +20,6 @@ def browser(request):
     def teardown():
         driver.close()
 
-    request.addfinalizer(teardown)
-
     if browser == "chrome":
         options = webdriver.ChromeOptions()
         if headless:
@@ -36,6 +34,8 @@ def browser(request):
     if maximized:
         driver.maximize_window()
 
+    driver.implicitly_wait(5)
+    request.addfinalizer(teardown)
     return driver
 
 

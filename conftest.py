@@ -5,7 +5,7 @@ from selenium import webdriver
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", choices=["chrome", "firefox"], default="chrome", help="Browser")
-    parser.addoption("--maximized", action="store_true", help="Full screen browser window")
+    parser.addoption("--maximized", action="store_true", default="true", help="Full screen browser window")
     parser.addoption("--headless", action="store_true", help="Headless")
     parser.addoption("--URL", action="store", default="http://localhost", help="Base url for web site")
 

@@ -99,6 +99,7 @@ def test_add_goods(browser, base_url):
     before_count_goods = WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR,
                                                                                          'div.row>div.text-right'))) \
         .text.split(' ')[5]
+    assert WebDriverWait(browser, 5).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.table>tbody>tr')))
     WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR,
                                                                     '[data-original-title="Add New"]'))).click()
     product_name = WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR,
@@ -134,8 +135,8 @@ def test_filter_list_of_products(browser, base_url):
     pwd_field.send_keys('bitnami')
     submit_btn.click()
     WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, '#menu-catalog'))).click()
-
     WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.LINK_TEXT, PRODUCTS_LINK_TEXT))).click()
+    assert WebDriverWait(browser, 5).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.table>tbody>tr')))
     fltr_product_name_field = WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR,
                                                                                               '[name="filter_name"]')))
     fltr_product_name_field.clear()

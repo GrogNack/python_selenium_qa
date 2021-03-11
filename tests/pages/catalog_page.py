@@ -1,5 +1,5 @@
 from selenium.webdriver.common.by import By
-from base_page import BasePage
+from .base_page import BasePage
 
 
 class CatalogPageLocators:
@@ -12,3 +12,14 @@ class CatalogPageLocators:
 class CatalogPage(BasePage):
     path = '/index.php?route=product/category&path=20'
 
+    def get_goods(self):
+        return self.find_elements(CatalogPageLocators.LOCATOR_GOODS)
+
+    def get_text_of_goods(self):
+        return self.find_elements(CatalogPageLocators.LOCATOR_TEXT_OF_GOODS)
+
+    def get_copyright_text(self):
+        return self.find_elements(CatalogPageLocators.LOCATOR_COPYRIGHT_TEXT)
+
+    def get_btn_view(self):
+        return self.find_elements(CatalogPageLocators.LOCATOR_BTN_VIEW)

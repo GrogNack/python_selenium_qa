@@ -1,6 +1,8 @@
+import allure
 import pytest
-
+from allure_commons.types import AttachmentType
 from selenium import webdriver
+from selenium.webdriver.support.events import EventFiringWebDriver, AbstractEventListener
 
 
 def pytest_addoption(parser):
@@ -45,16 +47,13 @@ def browser(request):
         }
     }
 
-    if browser == "chrome":
-        options = webdriver.ChromeOptions()
-        if headless:
-            options.headless = True
-        driver = webdriver.Chrome(options=options)
-    if browser == "firefox":
-        options = webdriver.FirefoxOptions()
-        if headless:
-            options.headless = True
-        driver = webdriver.Firefox(options=options)
+    driver = EventFiringWebDriver(webdriver.Remote(
+        command_executor=executor_url,
+        desired_capabilities=caps
+    ), ExceptionListener())
+
+    def fin():
+        driver.quit()
 
     if maximized:
         driver.maximize_window()
@@ -66,3 +65,16 @@ def browser(request):
 @pytest.fixture
 def base_url(request):
     return request.config.getoption("--URL")
+
+
+@pytest.fixture(scope="session")
+def generate_env(request):
+    with open("allure-results/environment.properties", "w") as f:
+        f.writelines("Browser=" + request.config.getoption("--browser") + "\n")
+        f.writelines("Browser.Version=" + request.config.getoption("--bver") + "\n")
+        f.writelines("Stand=" + request.config.getoption("--URL") + "\n")
+
+
+class ExceptionListener(AbstractEventListener):
+    def on_exception(self, exception, driver):
+        allure.attach(driver.get_screenshot_as_png(), name="Скриншот ошибки.png", attachment_type=AttachmentType.PNG)

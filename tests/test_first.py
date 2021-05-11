@@ -9,6 +9,7 @@ def test_open_main_page(browser, base_url, generate_env):
     mp = MainPage(browser)
     with allure.step("Открываем главную страницу"):
         mp.open(base_url, mp.path)
+    mp.logger.info("Сравниваем заголовок страницы с эталоном")
     with allure.step("Проверяем заголовок"):
         assert mp.get_title() == 'Your Store'
     with allure.step("Проверяем ссылку на OpenCart"):
@@ -35,6 +36,7 @@ def test_catalog_page(browser, base_url):
     cp = CatalogPage(browser)
     with allure.step(f"Открываем страницу каталога по адресу {cp.path}"):
         cp.open(base_url, cp.path)
+    cp.logger.info("Запоминаем количество товаров")
     with allure.step("Получаем товары со страницы"):
         goods = cp.get_goods()
     with allure.step("Проверяем кол-во товаров на странице"):

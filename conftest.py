@@ -1,9 +1,12 @@
 import allure
-import pytest
+import pytest, logging
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.support.events import EventFiringWebDriver, AbstractEventListener
 
+FORMAT = '%(name)s : %(asctime)-15s : %(filename)s : %(levelname)s : %(message)s'
+logging.basicConfig(level=logging.INFO, filename="logs/test.log", format=FORMAT)
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome")
@@ -14,7 +17,7 @@ def pytest_addoption(parser):
     parser.addoption("--videos", action="store_true", default=False)
     parser.addoption("--mobile", action="store_true")
     parser.addoption("--maximized", action="store_true", default=False)
-    parser.addoption("--URL", action="store", default="http://demo-opencart.ru/", help="Base url for web site")
+    parser.addoption("--URL", action="store", default="http://demo-opencart.ru", help="Base url for web site")
 
 
 @pytest.fixture
@@ -78,3 +81,7 @@ def generate_env(request):
 class ExceptionListener(AbstractEventListener):
     def on_exception(self, exception, driver):
         allure.attach(driver.get_screenshot_as_png(), name="Скриншот ошибки.png", attachment_type=AttachmentType.PNG)
+        logging.error(exception)
+
+    def after_navigate_to(self, url, driver):
+        allure.attach(driver.get_screenshot_as_png(), name=f"Переход на {url}", attachment_type=AttachmentType.PNG)
